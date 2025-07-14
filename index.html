@@ -1,45 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Calendar</title>
+  <meta charset="UTF-8" />
+  <title>Minimal Calendar Widget</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      font-family: sans-serif;
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: auto;
+      background: transparent;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 100%;
       display: flex;
       justify-content: center;
-      padding: 20px;
+      padding: 16px;
     }
+
     .calendar {
-      max-width: 300px;
       width: 100%;
+      max-width: 360px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
       padding: 20px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      text-align: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     }
+
+    .calendar h2 {
+      margin: 0 0 12px;
+      font-size: 1.25rem;
+      text-align: center;
+      color: #222;
+    }
+
     .days {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
+      gap: 8px;
+      text-align: center;
     }
+
     .day {
-      padding: 4px 0;
+      padding: 8px 0;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.3);
+      color: #333;
     }
+
     .today {
       background: #3b82f6;
       color: white;
-      border-radius: 50%;
+      font-weight: bold;
+    }
+
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      font-size: 0.75rem;
+      color: #777;
+      text-align: center;
+      margin-bottom: 6px;
     }
   </style>
 </head>
 <body>
-  <div class="calendar">
-    <h2 id="monthLabel"></h2>
-    <div class="days" id="calendarDays"></div>
+  <div class="wrapper">
+    <div class="calendar">
+      <h2 id="monthLabel">Loading...</h2>
+      <div class="weekdays">
+        <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+      </div>
+      <div class="days" id="calendarDays"></div>
+    </div>
   </div>
+
+  <!-- Script для календаря -->
   <script>
     const monthLabel = document.getElementById('monthLabel');
     const calendarDays = document.getElementById('calendarDays');
@@ -58,16 +104,21 @@
       calendarDays.innerHTML = "";
 
       for (let i = 0; i < startDay; i++) {
-        calendarDays.innerHTML += `<div class="day"></div>`;
+        calendarDays.innerHTML += `<div></div>`;
       }
 
       for (let d = 1; d <= totalDays; d++) {
-        const isToday = d === today.getDate();
+        const isToday = d === today.getDate() &&
+                        month === today.getMonth() &&
+                        year === today.getFullYear();
         calendarDays.innerHTML += `<div class="day ${isToday ? 'today' : ''}">${d}</div>`;
       }
     }
 
     generateCalendar();
   </script>
+
+  <!-- Вставка iframeResizer для авто-высоты в Notion -->
+  <script src="https://unpkg.com/iframe-resizer/js/iframeResizer.contentWindow.min.js"></script>
 </body>
 </html>
