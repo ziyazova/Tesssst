@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Calendar</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: white;
+      display: flex;
+      justify-content: center;
+    }
+    .calendar {
+      width: 360px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 16px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 12px;
+    }
+    .weekdays, .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+    .weekdays div {
+      font-size: 0.8rem;
+      color: #777;
+    }
+    .days div {
+      padding: 6px 0;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.05);
+    }
+    .today {
+      background: #3b82f6;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="calendar">
+    <h2 id="monthLabel">Loading...</h2>
+    <div class="weekdays">
+      <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+    </div>
+    <div class="days" id="calendarDays"></div>
+  </div>
+
+  <script>
+    const today = new Date();
+    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const currentDay = today.getDate();
+    const firstDay = new Date(year, month, 1).getDay() || 7;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    document.getElementById("monthLabel").textContent = `${monthNames[month]} ${year}`;
+    const container = document.getElementById("calendarDays");
+
+    for (let i = 1; i < firstDay; i++) {
+      container.innerHTML += `<div></div>`;
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const isToday = d === currentDay;
+      container.innerHTML += `<div class="${isToday ? 'today' : ''}">${d}</div>`;
+    }
+  </script>
+</body>
+</html>
