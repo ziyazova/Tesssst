@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .calendar {
+      max-width: 300px;
+      width: 100%;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .day {
+      padding: 4px 0;
+    }
+    .today {
+      background: #3b82f6;
+      color: white;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="calendar">
+    <h2 id="monthLabel"></h2>
+    <div class="days" id="calendarDays"></div>
+  </div>
+  <script>
+    const monthLabel = document.getElementById('monthLabel');
+    const calendarDays = document.getElementById('calendarDays');
+    const today = new Date();
+    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+    function generateCalendar() {
+      const year = today.getFullYear();
+      const month = today.getMonth();
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+      const totalDays = lastDay.getDate();
+
+      monthLabel.textContent = `${monthNames[month]} ${year}`;
+      calendarDays.innerHTML = "";
+
+      for (let i = 0; i < startDay; i++) {
+        calendarDays.innerHTML += `<div class="day"></div>`;
+      }
+
+      for (let d = 1; d <= totalDays; d++) {
+        const isToday = d === today.getDate();
+        calendarDays.innerHTML += `<div class="day ${isToday ? 'today' : ''}">${d}</div>`;
+      }
+    }
+
+    generateCalendar();
+  </script>
+</body>
+</html>
