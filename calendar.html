@@ -7,29 +7,12 @@
 
   <!-- responsive overrides -->
   <style>
-    /* базовый сброс */
     html,body{margin:0;padding:0;width:100%;height:100%;}
-
-    /* обёртка — помогает по‑центру и задаёт гибкую ширину */
-    .calendarContainer{
-      width:100%;
-      padding:0 8px;           /* небольшие боковые отступы */
-      box-sizing:border-box;
-      display:flex;
-      justify-content:center;
-    }
-
-    /* сам календарь тянется, но остаётся читабельным */
-    .calendar{
-      width:100%;
-      max-width:720px;         /* больше → крупнее в широких колонках Notion */
-      border-radius:12px;
-      box-shadow:0 4px 12px rgba(0,0,0,.1);
-      padding:16px;
-      text-align:center;
-    }
-
-    /* сетка */
+    .calendarContainer{width:100%;padding:0 8px;
+                       box-sizing:border-box;display:flex;
+                       justify-content:center;}
+    .calendar{width:100%;max-width:720px;border-radius:12px;
+              box-shadow:0 4px 12px rgba(0,0,0,.1);padding:16px;text-align:center;will-change:transform;}
     h2{margin-bottom:12px}
     .weekdays,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
     .weekdays div{font-size:.8rem;color:#777}
@@ -49,28 +32,45 @@
      <div class="days" id="calendarDays"></div>
    </div>
  </div>
-
+ 
  <script>
-   const today=new Date(),
-         monthNames=["January","February","March","April","May","June",
-                     "July","August","September","October","November","December"],
-         year=today.getFullYear(),month=today.getMonth(),
-         currentDay=today.getDate(),
-         firstDay=new Date(year,month,1).getDay()||7,
-         daysInMonth=new Date(year,month+1,0).getDate();
+   /* -------- основные данные -------- */
+   const today = new Date();
+   const monthNames = ["January","February","March","April","May","June",
+                       "July","August","September","October","November","December"];
+   const year = today.getFullYear();
+   const month = today.getMonth();
+   const currentDay = today.getDate();
+   const firstDay = new Date(year, month, 1).getDay() || 7;
+   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-   document.getElementById('monthLabel').textContent=`${monthNames[month]} ${year}`;
-   const cont=document.getElementById('calendarDays');
-   for(let i=1;i<firstDay;i++) cont.innerHTML+='<div></div>';
-   for(let d=1;d<=daysInMonth;d++)
-     cont.innerHTML+=`<div class="${d===currentDay?'today':''}">${d}</div>`;
- </script>
+   document.getElementById('monthLabel').textContent = `${monthNames[month]} ${year}`;
 
- <!-- авто‑refresh при возвращении на вкладку (компромиссное решение) -->
- <script>
-   document.addEventListener('visibilitychange', () => {
-     if (!document.hidden) location.reload();
-   });
+   const cont = document.getElementById('calendarDays');
+
+   /* -------- функция построения сетки -------- */
+   const rebuildCalendar = () => {
+     cont.innerHTML = '';
+     for (let i = 1; i < firstDay; i++) cont.appendChild(document.createElement('div'));
+     for (let d = 1; d <= daysInMonth; d++) {
+       const cell = document.createElement('div');
+       if (d === currentDay) cell.classList.add('today');
+       cell.textContent = d;
+       cont.appendChild(cell);
+     }
+   };
+
+   /* -------- DEBOUNCE на частые resize события -------- */
+   let debounceTimer;
+   const lazyRebuild = () => {
+     clearTimeout(debounceTimer);
+     debounceTimer = setTimeout(rebuildCalendar, 120); // не чаще, чем ~8 раз/сек
+   };
+
+   new ResizeObserver(lazyRebuild).observe(document.body);
+
+   /* -------- первичный рендер -------- */
+   rebuildCalendar();
  </script>
 </body>
 </html>
