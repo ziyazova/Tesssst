@@ -1,19 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Widget Wrapper</title>
-<style>
-  html,body{margin:0;padding:0;width:100%;height:100%;background:transparent;
-            display:flex;justify-content:center;align-items:center;}
-  /* iframe занимает всю ширину/высоту контейнера; высоту можно фиксировать,
-     если в Notion нужен определённый размер */
-  iframe{width:100%;max-width:420px;height:100%;min-height:420px;border:none;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Widget Wrapper</title>
+
+  <style>
+    html,body{
+      margin:0;
+      padding:0;
+      width:100%;
+      height:100%;
+      background:transparent;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    /* iFrame тянется на всю ширину колонки Notion,
+       высоту можно ограничить минимальным значением, чтобы не схлопывался */
+    iframe{
+      width:100%;
+      height:100%;
+      min-height:420px;   /* оставляем «рост» как раньше */
+      border:none;
+      /* БЕЗ max‑width — календарь теперь сам решит, сколько ему нужно */
+    }
+  </style>
 </head>
+
 <body>
-  <!-- Не забываем для Notion allow-scripts/allow-same-origin -->
-  <iframe src="./calendar.html" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
+  <!-- allow‑scripts + allow‑same‑origin обязательно,
+       иначе JS внутри календаря не запустится -->
+  <iframe
+    src="./calendar.html"
+    sandbox="allow-scripts allow-same-origin"
+    loading="lazy">
+  </iframe>
 </body>
 </html>
